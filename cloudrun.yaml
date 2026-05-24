@@ -1,0 +1,69 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: sbgcrun-batch
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+        # TODO: change for your own vpc name
+        # TODO: 配布時はPROJECT_IDをプレースホルダーにする
+        run.googleapis.com/network-interfaces: '[{"network":"sbgcrun-app", "subnetwork":"sbgcrun-app"}]'
+        run.googleapis.com/vpc-access-egress: all-traffic
+        # batch コンテナは cloud-sql-proxy が起動完了してから開始する
+        run.googleapis.com/container-dependencies: '{"batch":["cloud-sql-proxy"]}'
+    spec:
+      taskCount: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - image: batch
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 512Mi
+              env:
+                - name: DB_USERNAME
+                  value: "sbgcrunuser"
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: latest
+                      name: sbgcrun-app-db-password
+                - name: DB_HOST
+                  value: "127.0.0.1" # Cloud SQL Auth Proxy サイドカー経由で接続
+                - name: DB_PORT
+                  value: "5432"
+                - name: DB_NAME
+                  value: "app"
+            - name: cloud-sql-proxy
+              image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.4
+              args:
+                - "--structured-logs"
+                - "--port=5432"
+                - "--private-ip"
+                # health-check 用 HTTP サーバを 0.0.0.0:9090 で起動
+                # Cloud Run の startupProbe から到達可能にするため必要
+                - "--health-check"
+                - "--http-address=0.0.0.0"
+                - "--http-port=9090"
+                # TODO: 配布時はPROJECT_IDをプレースホルダーにする
+                # フォーマット: <PROJECT_ID>:<REGION>:<INSTANCE_NAME>
+                - "core-port-495407-g3:asia-east1:sbgcrun-app-instance"
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 256Mi
+              startupProbe:
+                timeoutSeconds: 5
+                periodSeconds: 5
+                failureThreshold: 20
+                httpGet:
+                  path: /startup
+                  port: 9090
+          maxRetries: 3
+          timeoutSeconds: "600"
+          # TODO: 配布時はPROJECT_IDをプレースホルダーにする
+          serviceAccountName: sbgcrun-app-batch@core-port-495407-g3.iam.gserviceaccount.com

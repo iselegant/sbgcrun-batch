@@ -1,0 +1,33 @@
+apiVersion: skaffold/v3
+kind: Config
+metadata:
+  name: sbgcrun-batch
+build:
+  artifacts:
+    - image: batch
+      docker:
+        dockerfile: Dockerfile
+  tagPolicy:
+    gitCommit:
+      variant: AbbrevCommitSha
+      ignoreChanges: true
+  local:
+    push: false
+    useDockerCLI: true
+    useBuildkit: true
+    concurrency: 0
+deploy:
+  cloudrun: {}
+profiles:
+  - name: v1
+    activation:
+      - env: DEPLOY_ENV=v1
+    build:
+      local:
+        push: true
+        useDockerCLI: true
+        useBuildkit: true
+        concurrency: 0
+    manifests:
+      rawYaml:
+        - ./cloudrun.yaml
