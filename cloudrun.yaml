@@ -7,8 +7,6 @@ spec:
     metadata:
       annotations:
         run.googleapis.com/execution-environment: gen2
-        # TODO: change for your own vpc name
-        # TODO: 配布時はPROJECT_IDをプレースホルダーにする
         run.googleapis.com/network-interfaces: '[{"network":"sbgcrun-app", "subnetwork":"sbgcrun-app"}]'
         run.googleapis.com/vpc-access-egress: all-traffic
         # batch コンテナは cloud-sql-proxy が起動完了してから開始する
@@ -51,7 +49,7 @@ spec:
                 - "--http-port=9090"
                 # TODO: 配布時はPROJECT_IDをプレースホルダーにする
                 # フォーマット: <PROJECT_ID>:<REGION>:<INSTANCE_NAME>
-                - "core-port-495407-g3:asia-east1:sbgcrun-app-instance"
+                - "PROJECT_ID:asia-east1:sbgcrun-app-instance"
               resources:
                 limits:
                   cpu: 500m
@@ -65,5 +63,4 @@ spec:
                   port: 9090
           maxRetries: 3
           timeoutSeconds: "600"
-          # TODO: 配布時はPROJECT_IDをプレースホルダーにする
-          serviceAccountName: sbgcrun-app-batch@core-port-495407-g3.iam.gserviceaccount.com
+          serviceAccountName: sbgcrun-app-batch@PROJECT_ID.iam.gserviceaccount.com
