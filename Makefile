@@ -2,7 +2,7 @@
 
 # ビルド後の出力先ディレクトリ
 BUILD_DIR = bin
-BINARY    = sbcntr-batch
+BINARY    = main
 
 # allターゲットでは「validate → build → run」を一括実行
 all: validate build
@@ -83,7 +83,7 @@ help:
 	@echo "Environment variables:"
 	@echo "  DB_HOST          DBホスト (default: localhost)"
 	@echo "  DB_PORT          DBポート (default: 5432)"
-	@echo "  DB_USERNAME      DBユーザー名 (default: sbcntrapp)"
+	@echo "  DB_USERNAME      DBユーザー名 (default: sbgcrunuser)"
 	@echo "  DB_PASSWORD      DBパスワード (default: password)"
-	@echo "  DB_NAME          DB名 (default: sbcntrapp)"
+	@echo "  DB_NAME          DB名 (default: app)"
 	@echo "  ENABLE_TRACING   Cloud Trace有効化 (default: false)"

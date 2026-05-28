@@ -9,14 +9,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/uma-arai/sbcntr-batch/internal/common/config"
-	"github.com/uma-arai/sbcntr-batch/internal/common/tracing"
-	"github.com/uma-arai/sbcntr-batch/internal/common/utils"
-	"github.com/uma-arai/sbcntr-batch/internal/service/batch"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/config"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/tracing"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/utils"
+	"github.com/uma-arai/sbgcrun-batch/internal/service/batch"
 )
 
 const (
-	serviceName    = "sbcntr-batch"
+	serviceName    = "sbgcrun-batch"
 	defaultTimeout = 5 * time.Minute
 )
 

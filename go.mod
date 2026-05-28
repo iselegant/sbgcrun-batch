@@ -1,4 +1,4 @@
-module github.com/uma-arai/sbcntr-batch
+module github.com/uma-arai/sbgcrun-batch
 
 go 1.23
 

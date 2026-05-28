@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/uma-arai/sbcntr-batch/internal/common/models"
-	"github.com/uma-arai/sbcntr-batch/internal/model"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/models"
+	"github.com/uma-arai/sbgcrun-batch/internal/model"
 )
 
 type ReservationRepository interface {

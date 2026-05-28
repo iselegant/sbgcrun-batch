@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/uma-arai/sbcntr-batch/internal/model"
+	"github.com/uma-arai/sbgcrun-batch/internal/model"
 )
 
 // NotificationRepository は通知の永続化を担当するインターフェースです

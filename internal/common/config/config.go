@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/uma-arai/sbcntr-batch/internal/common/database"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/database"
 )
 
 type Config struct {
@@ -20,9 +20,9 @@ func LoadConfig() (*Config, error) {
 		DB: database.Config{
 			Host:     getEnvOrDefault("DB_HOST", "localhost"),
 			Port:     getEnvAsIntOrDefault("DB_PORT", 5432),
-			UserName: getEnvOrDefault("DB_USERNAME", "sbcntrapp"),
+			UserName: getEnvOrDefault("DB_USERNAME", "sbgcrunuser"),
 			Password: getEnvOrDefault("DB_PASSWORD", "password"),
-			DBName:   getEnvOrDefault("DB_NAME", "sbcntrapp"),
+			DBName:   getEnvOrDefault("DB_NAME", "app"),
 		},
 		EnableTracing: isTracingEnabled(),
 	}

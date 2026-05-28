@@ -23,9 +23,11 @@ type Config struct {
 }
 
 func NewDB(cfg Config) (*DB, error) {
-	// localhostのDBの場合はSSLを無効化
+	// localhost / 127.0.0.1（Cloud SQL Auth Proxy サイドカー経由）の場合は SSL を無効化
 	var sslModeValue string
-	if cfg.Host == "localhost" || os.Getenv("DB_HOST") == "localhost" {
+	dbHostEnv := os.Getenv("DB_HOST")
+	if cfg.Host == "localhost" || cfg.Host == "127.0.0.1" ||
+		dbHostEnv == "localhost" || dbHostEnv == "127.0.0.1" {
 		sslModeValue = "disable"
 	} else {
 		sslModeValue = "require" // 本番環境ではSSLを有効にする

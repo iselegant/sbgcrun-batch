@@ -11,14 +11,14 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 
-	"github.com/uma-arai/sbcntr-batch/internal/common/config"
-	"github.com/uma-arai/sbcntr-batch/internal/common/database"
-	"github.com/uma-arai/sbcntr-batch/internal/common/utils"
-	"github.com/uma-arai/sbcntr-batch/internal/model"
-	"github.com/uma-arai/sbcntr-batch/internal/repository"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/config"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/database"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/utils"
+	"github.com/uma-arai/sbgcrun-batch/internal/model"
+	"github.com/uma-arai/sbgcrun-batch/internal/repository"
 )
 
-var reservationTracer = otel.Tracer("sbcntr-batch/reservation")
+var reservationTracer = otel.Tracer("sbgcrun-batch/reservation")
 
 // ReservationBatchService は予約バッチ処理を担当します
 type ReservationBatchService struct {

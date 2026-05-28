@@ -17,5 +17,5 @@ RUN make validate && \
 # === runner: 本番イメージ ===
 FROM debian:12-slim AS runner
 
-COPY --from=builder /app/bin/sbcntr-batch /main
+COPY --from=builder /app/bin/main /main
 ENTRYPOINT ["/main"]

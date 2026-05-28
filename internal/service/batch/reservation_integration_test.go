@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/uma-arai/sbcntr-batch/internal/common/config"
-	"github.com/uma-arai/sbcntr-batch/internal/model"
+	"github.com/uma-arai/sbgcrun-batch/internal/common/config"
+	"github.com/uma-arai/sbgcrun-batch/internal/model"
 )
 
 // TestReservationBatchService_Integration は統合テストの例です
