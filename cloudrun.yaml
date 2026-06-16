@@ -50,7 +50,7 @@ spec:
                 - "--http-port=9090"
                 # TODO: 配布時はPROJECT_IDをプレースホルダーにする
                 # フォーマット: <PROJECT_ID>:<REGION>:<INSTANCE_NAME>
-                - "PROJECT_ID:asia-east1:sbgcrun-app-instance"
+                - "PROJECT_ID:asia-northeast1:sbgcrun-app-instance"
               resources:
                 limits:
                   cpu: 500m

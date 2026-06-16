@@ -29,6 +29,6 @@ steps:
         --skaffold-file=skaffold.yaml
 substitutions:
   _PIPELINE_NAME: sbgcrun-batch
-  _REGION: asia-east1
+  _REGION: asia-northeast1
 
 timeout: 1200s
