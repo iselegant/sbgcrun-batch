@@ -38,7 +38,7 @@ spec:
                 - name: DB_NAME
                   value: "app"
             - name: cloud-sql-proxy
-              image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.11.4
+              image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.22.1
               args:
                 - "--structured-logs"
                 - "--port=5432"
