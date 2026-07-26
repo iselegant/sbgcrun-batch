@@ -2,31 +2,64 @@ options:
   logging: CLOUD_LOGGING_ONLY
   env:
     - "DEPLOY_ENV=$_DEPLOY_ENV"
-    - "SKAFFOLD_DEFAULT_REPO=$_REGION-docker.pkg.dev/$PROJECT_ID/sbgcrun-app"
+    - "ARTIFACT_REPO=asia-northeast1-docker.pkg.dev/$PROJECT_ID/sbgcrun-app"
 
 steps:
-  - name: "gcr.io/k8s-skaffold/skaffold:v2.10.1"
+  - name: "gcr.io/cloud-builders/docker"
     id: "build"
     entrypoint: "bash"
     args:
       - "-c"
       - |-
-        git config --global core.abbrev 8
-        skaffold build --file-output=artifacts.json --filename=skaffold.yaml
+        set -euo pipefail
+        TAG=$(git rev-parse --short=8 HEAD)
+        IMAGE="$${ARTIFACT_REPO}/batch"
+
+        # 前回ビルドをキャッシュソースとして pull（初回・タグ未存在時は無視）
+        docker pull "$${IMAGE}:latest" || true
+
+        # 標準の docker build + push でビルド。
+        # buildx を使わないため、タグが直接実イメージの digest を指す（Image Index を介さない）。
+        # キャッシュは --cache-from + BUILDKIT_INLINE_CACHE で実現。
+        DOCKER_BUILDKIT=1 docker build \
+          --build-arg BUILDKIT_INLINE_CACHE=1 \
+          --cache-from "$${IMAGE}:latest" \
+          -t "$${IMAGE}:$${TAG}" \
+          -t "$${IMAGE}:latest" \
+          .
+
+        # push — タグが直接実イメージ digest を指す
+        docker push "$${IMAGE}:$${TAG}"
+        docker push "$${IMAGE}:latest"
+
+        # push 後に digest を取得
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$${IMAGE}:$${TAG}" | cut -d@ -f2)
+        if [ -z "$${DIGEST}" ]; then
+          echo "ERROR: failed to extract image digest" >&2
+          exit 1
+        fi
+
+        # Cloud Deploy 用 artifacts.json を生成
+        printf '{"builds":[{"imageName":"batch","tag":"%s:%s@%s"}]}' \
+          "$${IMAGE}" "$${TAG}" "$${DIGEST}" > artifacts.json
+        cat artifacts.json
+
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
-    id: deploy
+    id: "deploy"
     waitFor:
       - build
     entrypoint: "bash"
     args:
       - "-c"
       - |-
+        set -euo pipefail
         gcloud deploy releases create $$DEPLOY_ENV-$(git rev-parse --short=8 HEAD)-$(echo $BUILD_ID | cut -c1-8) \
         --project=$PROJECT_ID \
         --region=$_REGION \
         --delivery-pipeline=${_PIPELINE_NAME} \
         --build-artifacts=artifacts.json \
         --skaffold-file=skaffold.yaml
+
 substitutions:
   _PIPELINE_NAME: sbgcrun-batch
   _REGION: asia-northeast1
