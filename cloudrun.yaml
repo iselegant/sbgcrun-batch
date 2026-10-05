@@ -48,9 +48,9 @@ spec:
                 - "--health-check"
                 - "--http-address=0.0.0.0"
                 - "--http-port=9090"
-                # TODO: 配布時はPROJECT_IDをプレースホルダーにする
-                # フォーマット: <PROJECT_ID>:<REGION>:<INSTANCE_NAME>
-                - "PROJECT_ID:asia-northeast1:sbgcrun-app-instance"
+                # TODO: 配布時はiselegant-cloud-test2をプレースホルダーにする
+                # フォーマット: <iselegant-cloud-test2>:<REGION>:<INSTANCE_NAME>
+                - "iselegant-cloud-test2:asia-northeast1:sbgcrun-app-instance"
               resources:
                 limits:
                   cpu: 500m
@@ -64,4 +64,4 @@ spec:
                   port: 9090
           maxRetries: 3
           timeoutSeconds: "600"
-          serviceAccountName: sbgcrun-app-batch@PROJECT_ID.iam.gserviceaccount.com
+          serviceAccountName: sbgcrun-app-batch@iselegant-cloud-test2.iam.gserviceaccount.com
